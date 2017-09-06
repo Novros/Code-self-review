@@ -59,7 +59,7 @@ public class SelfReviewComponent implements ApplicationComponent {
 		});
 	}
 
-	private ReviewPanel getView() {
+	public static ReviewPanel getView() {
 		final Context context = new Context(new FirstStep());
 		final ReviewController controller = new ReviewController(context);
 		final ReviewPanel reviewPanel = new ReviewPanel(controller);
