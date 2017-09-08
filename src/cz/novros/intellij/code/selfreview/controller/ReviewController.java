@@ -1,37 +1,35 @@
 package cz.novros.intellij.code.selfreview.controller;
 
-import org.jetbrains.annotations.NotNull;
-
 import cz.novros.intellij.code.selfreview.model.Context;
 
 public class ReviewController {
 
 	private Context context;
 
-	public ReviewController(@NotNull final Context context) {
-		this.context = context;
-	}
-
-	public ReviewDto nextStep() {
+	public ViewData nextStep() {
 		context.goNextState();
-		return getDtoFromContext();
+		return getViewData();
 	}
 
-	public ReviewDto prevStep() {
+	public ViewData prevStep() {
 		context.goPrevState();
-		return getDtoFromContext();
+		return getViewData();
 	}
-	
-	public ReviewDto getCurrentStep() {
-		return getDtoFromContext();
+
+	public ViewData getCurrentStep() {
+		return getViewData();
 	}
 
 	public int getStepsCount() {
 		return Context.STEPS_COUNT;
 	}
 
-	private ReviewDto getDtoFromContext() {
-		final ReviewDto dto = new ReviewDto();
+	public void setContext(final Context context) {
+		this.context = context;
+	}
+
+	private ViewData getViewData() {
+		final ViewData dto = new ViewData();
 
 		dto.name = context.getCurrentName();
 		dto.step = context.getCurrentStep();

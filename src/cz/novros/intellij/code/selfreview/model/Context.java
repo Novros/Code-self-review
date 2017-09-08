@@ -11,8 +11,8 @@ public class Context {
 
 	private State currentState;
 
-	public Context(@NotNull final State beginState) {
-		this.currentState = beginState;
+	public Context(final State currentState) {
+		this.currentState = currentState;
 	}
 
 	public void goNextState() {
