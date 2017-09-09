@@ -14,9 +14,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import cz.novros.intellij.code.selfreview.model.State;
+import cz.novros.intellij.code.selfreview.view.utils.GuiUtils;
 
 /**
  * Form for one step item in {@link State#getContent()}.
+ * 
+ * @author Rostislav Novák
+ * @version 1.0
+ * @since 1.0
  */
 public class StepItem extends JPanel {
 
