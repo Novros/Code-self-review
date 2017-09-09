@@ -50,7 +50,7 @@ public class SecondStep implements State {
 						"- add each logical change to a separate commit"
 		));
 		content.add(Pair.of(
-				"always leave the campground cleaner than you found it”",
+				"Always leave the campground cleaner than you found it.",
 				""
 		));
 

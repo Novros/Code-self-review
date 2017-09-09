@@ -1,10 +1,14 @@
 package cz.novros.intellij.code.selfreview.view;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.*;
+
+import com.intellij.ui.JBColor;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jdesktop.swingx.HorizontalLayout;
@@ -81,8 +85,26 @@ public class StepView extends JPanel {
 		lblStepName.setText(data.name);
 
 		for (final Pair<String, String> item : data.content) {
+			if (pnlContent.getComponents().length > 0) {
+				pnlContent.add(createStepItemSeparator());
+			}
+
 			pnlContent.add(new StepItem(item));
 		}
+	}
+
+	/**
+	 * Create separator to delimit step items.
+	 *
+	 * @return Simple separator.
+	 */
+	private JComponent createStepItemSeparator() {
+		final JSeparator separator = new JSeparator();
+
+		separator.setForeground(JBColor.isBright() ? JBColor.LIGHT_GRAY : new Color(85, 85, 85));
+		separator.setSize(new Dimension(separator.getWidth() - 20, separator.getHeight()));
+
+		return separator;
 	}
 
 	/**
