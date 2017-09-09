@@ -1,17 +1,16 @@
 <idea-plugin>
-  <id>cz.novros.intellij</id>
+  <id>cz.novros.intellij.self-review-code</id>
   <name>Self review code plugin</name>
   <version>1.0</version>
   <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
   <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <em>most HTML tags may be used</em>
+      This plugin provides notes to help with self code review. All information are based on this blog article:
+      <a href=https://advancedweb.hu/2017/08/22/git-commit/">Git: A guide to create self-reviewed merge requests</a>.
     ]]></description>
 
   <change-notes><![CDATA[
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>
+    1.0 - Created project.
     ]]>
   </change-notes>
 
@@ -29,11 +28,6 @@
   </extensions>
 
   <actions>
-    <!-- Add your actions here -->
-    <action id="cz.novros.intellij.code.selfreview.HelloAction" class="cz.novros.intellij.code.selfreview.HelloAction" text="Hello"
-            description="Show hello world from plugin.">
-      <add-to-group group-id="ToolsMenu" anchor="first"/>
-    </action>
   </actions>
 
   <application-components>
