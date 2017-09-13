@@ -84,13 +84,13 @@ public class StepView extends JPanel {
 		lblActualStep.setText(Integer.toString(data.step));
 		lblStepName.setText(data.name);
 
-		for (final Pair<String, String> item : data.content) {
+		data.content.forEach(item -> {
 			if (pnlContent.getComponents().length > 0) {
 				pnlContent.add(createStepItemSeparator());
 			}
 
 			pnlContent.add(new StepItem(item));
-		}
+		});
 	}
 
 	/**
@@ -149,8 +149,8 @@ public class StepView extends JPanel {
 
 		lblStepName.setFont(lblStepName.getFont().deriveFont(Font.BOLD, 18f));
 
-		header.add(lblActualStep);
-		header.add(lblStepsCount);
+//		header.add(lblActualStep);
+//		header.add(lblStepsCount);
 		header.add(lblStepName);
 
 		return header;

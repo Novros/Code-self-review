@@ -7,6 +7,7 @@ import com.intellij.openapi.components.Storage;
 import org.jetbrains.annotations.Nullable;
 
 import cz.novros.intellij.code.selfreview.model.Context;
+import cz.novros.intellij.code.selfreview.model.DataParser;
 import cz.novros.intellij.code.selfreview.model.settings.SaveState;
 import cz.novros.intellij.code.selfreview.model.state.FirstStep;
 
@@ -24,7 +25,7 @@ public class SaveStateService implements PersistentStateComponent<SaveState> {
 	/**
 	 * Actual context from saved settings.
 	 */
-	private Context context = new Context(new FirstStep());
+	private Context context = new Context(DataParser.createStateModel());
 
 	/**
 	 * Return set context in this service.

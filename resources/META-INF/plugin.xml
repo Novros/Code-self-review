@@ -2,7 +2,7 @@
   <id>cz.novros.intellij.self-review-code</id>
   <name>Self review code plugin</name>
   <version>1.0</version>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+  <vendor email="rostislav.novak92@gmail.com" url="https://github.com/novros">Novros</vendor>
 
   <description><![CDATA[
       This plugin provides notes to help with self code review. All information are based on this blog article:

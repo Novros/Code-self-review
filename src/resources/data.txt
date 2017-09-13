@@ -1,0 +1,108 @@
+1. Prepare a branch
+* Create branch with name: <branch-type>-<issue-id>
+# Switch to the integration branch
+git checkout develop
+
+# Get the latest code
+git pull
+
+# Create a new topic branch with the name "feature-135"
+git checkout -b feature-135
+
+2. Create modifications
+* Commit early and often.
+- See commits as checkpoints. Coming up with a solution usually requires some experimentation. If you happen to break anything along the way, you can simply revert to a previous version of your code.
+
+* Recover context from logs and diffs.
+- observe recently opened files and hit undo/redo a couple of times in my editor
+- check git status, git diff and maybe even git log
+- git diff shows everything since my last commit
+
+* Always leave the campground cleaner than you found it.
+
+* Ask yourself offen: should I create a checkpoint?
+- check git status and git diff to review your latest uncommitted changes
+- always make logical unit for one commit
+- ensure that only the necessary changes are staged with git status and git diff --cached
+
+3. Commit
+* Add files to commit.
+- git add <file-or-folder-path> to stage these changes
+- git add --patch <file-path> to interactively stage only parts of a file
+- git reset <file-path> or git reset --patch <file-path> to unstage unwanted changes
+
+* Mind your commit message.
+- write descriptive commit messages
+- add each logical change to a separate commit
+
+4. Self-review
+* Check that every line is necessary to do what I will describe in the commit message.
+
+* Ensure that there is no weird formatting.
+
+* Search for TODO and FIXME marks, and try to sort them out.
+- If the issue is out of scope for my task then I open a ticket in the issue tracker and put the issue ID right next to the TODO mark. I fish out the rest of the TODOs at the final review before I push the code, so in this phase I usually don’t worry too much about them.
+
+5. Commit
+* commit: git commit 
+- The -m flag might be great to quickly add one-line commit messages, but don’t use it if you feel that you need space to express your thoughts.
+
+* Bad commit message: git commit --amend
+
+* Quick tips on going back in time
+- Use this commands carefully, the most of these are destructive in some way. Always watch out for your non-committed changes. When in doubt, create a backup first!
+
+- revert
+     - file
+         - last committed state: git checkout <file-or-folder-path>
+         - previous commit: git checkout <commit-id> <file-or-folder-path>
+    - commit: git revert <commit-id>
+
+* Backup/experiment: git checkout -b <name>
+- If you’d like to branch off from an earlier commit, then do the following:
+git checkout <commit-id>
+git checkout -b <name>
+
+- change branches with git checkout <branch-name>
+
+* Back to 3. until task is finished.
+
+6. Review and Share
+* Integrate work from the develop branch.
+# Commit or stash every change before you begin.
+
+# Switch to the integration branch
+git checkout develop
+
+# Get the latest code
+git pull
+# Switch back to the topic branch
+git checkout <task-branch-name>
+
+# If curious, check what commits are about to be merged
+
+# Merge new code to the topic branch
+git merge develop
+
+# Resolve all conflicts if there are any
+git mergetool
+
+7. Review
+* Run all the automated/manual tests to see that everything works as expected.
+* Ensure that everything that is required for the scope is finished.
+* Check modifications.
+- You can examine every modification in your branch: git diff develop.
+
+* Check for forgotten pieces of code.
+- Commented out blocks and debug statements.
+- Ensure compliance to project conventions, naming and code formatting rules.
+- Search for TODOs and FIXMEs.
+- Look for code smells like:
+    - unnecessary code duplication
+    - overly complicated code
+    - careless error handling and logging
+    - a class, function, or method is doing too much that could be split to enhance readability (see Single responsibility principle
+- Verify that the necessary automated tests are in place and they follow the project conventions. The test cases are descriptive, easy to read, the test exercise the application at the right level.
+
+* If anything is missing or broken fix it and add a new commit.
+* If everything looks fine, it’s time to hit git push and ask for a review. 

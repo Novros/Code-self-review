@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -104,9 +105,8 @@ public class StepItem extends JPanel {
 		};
 
 		headerComponent.addMouseListener(adapter);
-		for (final Component component : headerComponent.getComponents()) {
-			component.addMouseListener(adapter);
-		}
+		Arrays.stream(headerComponent.getComponents())
+				.forEach(component -> component.addMouseListener(adapter));
 
 		return pane;
 	}

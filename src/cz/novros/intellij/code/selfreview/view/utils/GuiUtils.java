@@ -9,6 +9,8 @@ import javax.swing.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import cz.novros.intellij.code.selfreview.util.ResourceUtils;
+
 /**
  * Contains constants for GUI and some helper methods.
  *
@@ -44,7 +46,7 @@ public class GuiUtils {
 		Icon icon = iconCache.get(fileName);
 
 		if (icon == null) {
-			final URL path = getResourcePath(fileName);
+			final URL path = ResourceUtils.getResourcePath(fileName);
 
 			if (path == null) {
 				return null;
@@ -55,17 +57,5 @@ public class GuiUtils {
 		}
 
 		return icon;
-	}
-
-	/**
-	 * Get url of resource file.
-	 *
-	 * @param fileName Name of file in resource folder.
-	 *
-	 * @return Url of resource of file or null if not found.
-	 */
-	@Nullable
-	public static URL getResourcePath(@NotNull final String fileName) {
-		return GuiUtils.class.getClassLoader().getResource(fileName);
 	}
 }
