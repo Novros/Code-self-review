@@ -1,20 +1,22 @@
 package cz.novros.intellij.code.selfreview.model;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.swing.*;
-
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import lombok.extern.slf4j.Slf4j;
 
 import cz.novros.intellij.code.selfreview.model.exception.DataParserException;
-import cz.novros.intellij.code.selfreview.model.state.MutableState;
+import cz.novros.intellij.code.selfreview.model.state.ImmutableState;
+import cz.novros.intellij.code.selfreview.model.state.ImmutableStateModel;
+import cz.novros.intellij.code.selfreview.model.state.ProcessLineData;
 import cz.novros.intellij.code.selfreview.util.ResourceUtils;
 
 /**
@@ -24,6 +26,7 @@ import cz.novros.intellij.code.selfreview.util.ResourceUtils;
  * @version 1.0
  * @since 1.0
  */
+@Slf4j
 public class DataParser {
 
 	/**
@@ -36,106 +39,131 @@ public class DataParser {
 	 */
 	private static final Pattern STEP_REGEX = Pattern.compile("^(\\* ).+");
 
-	public static State createStateModel() {
-		List<MutableState> loadedStates = new ArrayList<>();
+	/**
+	 * Path to default data in resource folder.
+	 */
+	private static final String DEFAULT_DATA_PATH = "data.txt";
 
-		try {
-			loadedStates = loadStates();
-		} catch (final DataParserException exception) {
-			JOptionPane.showMessageDialog(null, "Could not load plugin data!", "Error", JOptionPane.ERROR_MESSAGE);
-			// TODO Log exception and show error dialog.
+	/**
+	 * Create state model from default data file.
+	 *
+	 * @return First state in model state. If data was not found, it will return empty state.
+	 */
+	public static StateModel createStateModel() {
+		return createStateModel(DEFAULT_DATA_PATH, true);
+	}
+
+	/**
+	 * Create state model from given file path.
+	 *
+	 * @param filePath Path to file from which should be model created.
+	 *
+	 * @return First state in model state. If data was not found, it will return empty state.
+	 */
+	public static StateModel createStateModel(@NotNull final String filePath) {
+		return createStateModel(filePath, false);
+	}
+
+	/**
+	 * Create state model from given file path.
+	 *
+	 * @param filePath       Path to file from which should be model created.
+	 * @param isResourceFile True if filePath is in resource folder, otherwise false.
+	 *
+	 * @return First state in model state. If data was not found, it will return empty state.
+	 */
+	private static StateModel createStateModel(@NotNull final String filePath, final boolean isResourceFile) {
+		final ImmutableStateModel stateModel = new ImmutableStateModel();
+
+		try (final BufferedReader reader = createReaderFromFile(filePath, isResourceFile)) {
+			loadStates(reader).forEach(stateModel::addState);
+		} catch (final DataParserException | IOException exception) {
+			log.error("Could not load plugin data!", exception);
 		}
 
-		if (loadedStates.isEmpty()) {
-			return new MutableState();
-		}
-
-		State previousState = loadedStates.get(loadedStates.size() - 1);
-		for (int i = 0; i < loadedStates.size(); i++) {
-			final MutableState state = loadedStates.get(i);
-
-			if (previousState != null) {
-				state.setPreviousState(previousState);
-			}
-
-			if (i < (loadedStates.size() - 1)) {
-				state.setNextState(loadedStates.get(i + 1));
-			} else {
-				state.setNextState(loadedStates.get(0));
-			}
-
-			previousState = state;
-		}
-
-		return loadedStates.get(0); // TODO Return steps count and remove number
+		return stateModel;
 	}
 
 	/**
 	 * Load all states from file "resources/data.txt".
+	 *
+	 * @param reader BufferedReader for reading lines of data.
 	 *
 	 * @return All loaded states in list.
 	 *
 	 * @throws IllegalArgumentException If file with data was not found.
 	 * @throws DataParserException      When was problem with file data.
 	 */
-	private static List<MutableState> loadStates() throws DataParserException {
-		final InputStream fileStream = ResourceUtils.getResourceFileStream("data.txt");
+	private static List<ImmutableState> loadStates(@NotNull final BufferedReader reader) throws DataParserException {
+		final ProcessLineData data = new ProcessLineData();
 
-		if (fileStream == null) {
-			throw new IllegalStateException("Data not found!");
-		}
-
-		final List<MutableState> states = new ArrayList<>();
-
-		MutableState state = null;
-		String shortDescription = null;
-		final StringBuilder content = new StringBuilder("");
-
-		try (final BufferedReader reader = new BufferedReader(new InputStreamReader(fileStream))) {
+		try {
 			String line = reader.readLine();
 			while (line != null) {
-				if (STATE_REGEX.matcher(line).find()) {
-					if (state != null) {
-						addContentItem(state, shortDescription, content);
-						states.add(state);
-					}
-
-					shortDescription = null;
-
-					state = new MutableState();
-					state.setName(line);
-
-				} else if (STEP_REGEX.matcher(line).find()) {
-					addContentItem(state, shortDescription, content);
-					shortDescription = line;
-
-				} else {
-					if (content.length() > 0 || !line.isEmpty()) {
-						content.append(line).append("\n"); // FIXME
-					}
-				}
-
+				processLine(data, line);
 				line = reader.readLine();
 			}
 
-			if (state != null) {
-				states.add(state);
+			// Add last state
+			if (data.getBuilder() != null) {
+				data.buildAndAddState();
 			}
-		} catch (
-				final IOException exception)
-
-		{
+		} catch (final IOException exception) {
 			throw new DataParserException("There was problem with reading data file!", exception);
 		}
 
-		return states;
+		return data.getStates();
 	}
 
-	private static void addContentItem(@Nullable final MutableState state, @Nullable final String shortDescription, @NotNull final StringBuilder description) {
-		if (shortDescription != null && !shortDescription.isEmpty() && state != null) {
-			state.addContent(org.apache.commons.lang3.tuple.Pair.of(shortDescription, description.toString()));
+	private static void processLine(@NotNull final ProcessLineData data, @NotNull final String line) {
+		if (STATE_REGEX.matcher(line).find()) {
+			if (data.getBuilder() != null) {
+				addContentItem(data);
+				data.buildAndAddState();
+			}
+
+			data.setBuilder(ImmutableState.builder());
+			data.getBuilder().name(line);
+			data.setShortDescription(null);
+
+		} else if (STEP_REGEX.matcher(line).find()) {
+			addContentItem(data);
+			data.setShortDescription(line);
+
+		} else {
+			if (data.getContent().length() > 0 || !line.isEmpty()) {
+				data.getContent().append(line).append("\n"); // FIXME
+			}
+		}
+	}
+
+	private static void addContentItem(@NotNull final ProcessLineData data) {
+		if (data.canAddContentItem()) {
+			data.addContentItem();
 		}
 
-		description.setLength(0);
+		data.getContent().setLength(0);
+	}
+
+	/**
+	 * Create buffered reader from file.
+	 *
+	 * @param file           Path to file.
+	 * @param isResourceFIle True if file is from resource folder and false from somewhere else.
+	 *
+	 * @return Buffered reader for file.
+	 *
+	 * @throws FileNotFoundException If file was not found.
+	 */
+	private static BufferedReader createReaderFromFile(@NotNull final String file, final boolean isResourceFIle) throws FileNotFoundException {
+		final InputStream fileStream = isResourceFIle ?
+				ResourceUtils.getResourceFileStream("data.txt") :
+				new FileInputStream(file);
+
+		if (fileStream == null) {
+			throw new FileNotFoundException("Data file was not found!");
+		}
+
+		return new BufferedReader(new InputStreamReader(fileStream));
 	}
 }

@@ -24,7 +24,7 @@ public class SaveStateService implements PersistentStateComponent<SaveState> {
 	/**
 	 * Actual context from saved settings.
 	 */
-	private Context context = new Context(DataParser.createStateModel());
+	private Context context = new Context(DataParser.createStateModel().getFirstState());
 
 	/**
 	 * Return set context in this service.
