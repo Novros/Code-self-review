@@ -2,6 +2,7 @@
 .idea/
 *.iml
 out/
+!lib
 
 # Compiled class file
 *.class
@@ -16,7 +17,7 @@ out/
 .mtj.tmp/
 
 # Package Files #
-*.jar
+code-self-review.jar
 *.war
 *.ear
 *.zip

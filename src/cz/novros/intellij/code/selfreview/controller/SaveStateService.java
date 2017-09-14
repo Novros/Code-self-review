@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import cz.novros.intellij.code.selfreview.model.Context;
 import cz.novros.intellij.code.selfreview.model.DataParser;
 import cz.novros.intellij.code.selfreview.model.settings.SaveState;
-import cz.novros.intellij.code.selfreview.model.state.FirstStep;
 
 /**
  * Service for saving settings ({@link SaveState}).
