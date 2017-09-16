@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import cz.novros.intellij.code.selfreview.model.Context;
 import cz.novros.intellij.code.selfreview.model.DataParser;
+import cz.novros.intellij.code.selfreview.model.StateModel;
 import cz.novros.intellij.code.selfreview.model.settings.SaveState;
 
 /**
@@ -24,7 +25,21 @@ public class SaveStateService implements PersistentStateComponent<SaveState> {
 	/**
 	 * Actual context from saved settings.
 	 */
-	private Context context = new Context(DataParser.createStateModel().getFirstState());
+	private final Context context;
+
+	/**
+	 * Constructor SaveStateService creates a new SaveStateService instance.
+	 */
+	public SaveStateService() {
+		final StateModel model = DataParser.createStateModel();
+		final cz.novros.intellij.code.selfreview.model.State firstState = model.getFirstState();
+
+		if (firstState == null) {
+			context = new Context();
+		} else {
+			context = new Context(firstState, model.getSize());
+		}
+	}
 
 	/**
 	 * Return set context in this service.
@@ -55,7 +70,7 @@ public class SaveStateService implements PersistentStateComponent<SaveState> {
 	 */
 	@Override
 	public void loadState(final SaveState saveState) {
-		for (int i = context.getCurrentStep(); i <= Context.STEPS_COUNT && i < saveState.step; i++) {
+		for (int i = context.getCurrentStep(); i <= context.getStepCount() && i < saveState.step; i++) {
 			context.goNextState();
 		}
 	}

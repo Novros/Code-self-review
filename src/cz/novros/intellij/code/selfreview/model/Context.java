@@ -2,8 +2,11 @@ package cz.novros.intellij.code.selfreview.model;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Context for {@link State} of this plugin.
@@ -15,36 +18,50 @@ import org.jetbrains.annotations.NotNull;
 public class Context {
 
 	/**
-	 * All steps of this plugin.
+	 * All steps of this context.
 	 */
-	public static final int STEPS_COUNT = 3;
+	private final int stepsCount;
 
 	/**
 	 * Current state of context.
 	 */
+	@Nullable
 	private State currentState;
+
+	/**
+	 * Create empty context.
+	 */
+	public Context() {
+		this.currentState = null;
+		this.stepsCount = 0;
+	}
 
 	/**
 	 * Create context with given state.
 	 *
 	 * @param currentState State which will be set.
 	 */
-	public Context(final State currentState) {
+	public Context(@NotNull final State currentState, final int stepsCount) {
 		this.currentState = currentState;
+		this.stepsCount = stepsCount;
 	}
 
 	/**
 	 * Switch context to next state.
 	 */
 	public void goNextState() {
-		currentState.goNextState(this);
+		if (currentState != null) {
+			currentState.goNextState(this);
+		}
 	}
 
 	/**
 	 * Switch context to previous state.
 	 */
 	public void goPrevState() {
-		currentState.goPrevState(this);
+		if (currentState != null) {
+			currentState.goPrevState(this);
+		}
 	}
 
 	/**
@@ -62,7 +79,7 @@ public class Context {
 	 * @return Number of current step.
 	 */
 	public int getCurrentStep() {
-		return currentState.getStep();
+		return currentState != null ? currentState.getStep() : 0;
 	}
 
 	/**
@@ -70,8 +87,9 @@ public class Context {
 	 *
 	 * @return Name of current step.
 	 */
+	@Nullable
 	public String getCurrentName() {
-		return currentState.getName();
+		return currentState != null ? currentState.getName() : null;
 	}
 
 	/**
@@ -79,7 +97,17 @@ public class Context {
 	 *
 	 * @return Content of current step.
 	 */
+	@NotNull
 	public List<Pair<String, String>> getCurrentContent() {
-		return currentState.getContent();
+		return currentState != null ? currentState.getContent() : ImmutableList.of();
+	}
+
+	/**
+	 * Method getStepCount returns the stepCount of this Context object.
+	 *
+	 * @return the stepCount (type int) of this Context object.
+	 */
+	public int getStepCount() {
+		return stepsCount;
 	}
 }

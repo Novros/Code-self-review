@@ -51,7 +51,7 @@ public class ReviewController {
 	 * @return Number of steps.
 	 */
 	public int getStepsCount() {
-		return Context.STEPS_COUNT;
+		return context.getStepCount();
 	}
 
 	/**
