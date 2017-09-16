@@ -36,23 +36,43 @@ public class ImmutableStateModel implements StateModel {
 		states.add(state);
 	}
 
+	/**
+	 * Return first state in model.
+	 *
+	 * @return First state or null if model is empty.
+	 */
 	@Nullable
 	@Override
 	public State getFirstState() {
 		return states.isEmpty() ? null : states.get(0);
 	}
 
+	/**
+	 * Return last state in model
+	 *
+	 * @return Last state or null if model is empty.
+	 */
 	@Nullable
 	@Override
 	public State getLastState() {
 		return states.isEmpty() ? null : states.get(states.size() - 1);
 	}
 
+	/**
+	 * Return size model.
+	 *
+	 * @return Number of state in model.
+	 */
 	@Override
 	public int getSize() {
 		return states.size();
 	}
 
+	/**
+	 * Check if model is empty.
+	 *
+	 * @return True if model is empty, otherwise false.
+	 */
 	@Override
 	public boolean isEmpty() {
 		return states.isEmpty();

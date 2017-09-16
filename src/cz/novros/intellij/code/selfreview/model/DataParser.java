@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.NotNull;
 
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import cz.novros.intellij.code.selfreview.model.exception.DataParserException;
@@ -27,6 +28,7 @@ import cz.novros.intellij.code.selfreview.util.ResourceUtils;
  * @since 1.0
  */
 @Slf4j
+@UtilityClass
 public class DataParser {
 
 	/**
@@ -98,13 +100,14 @@ public class DataParser {
 		final ProcessLineData data = new ProcessLineData();
 
 		try {
+			// Process each line
 			String line = reader.readLine();
 			while (line != null) {
 				processLine(data, line);
 				line = reader.readLine();
 			}
 
-			// Add last state
+			// Add last worked state
 			if (data.getBuilder() != null) {
 				data.buildAndAddState();
 			}
@@ -115,34 +118,30 @@ public class DataParser {
 		return data.getStates();
 	}
 
+	/**
+	 * Process one line from data file.
+	 *
+	 * @param data Data dto which holds actual processed data for building {@link State}.
+	 * @param line Line from data file, which should be processed.
+	 */
 	private static void processLine(@NotNull final ProcessLineData data, @NotNull final String line) {
 		if (STATE_REGEX.matcher(line).find()) {
 			if (data.getBuilder() != null) {
-				addContentItem(data);
+				data.tryAddContentItem();
 				data.buildAndAddState();
 			}
 
-			data.setBuilder(ImmutableState.builder());
-			data.getBuilder().name(line);
-			data.setShortDescription(null);
+			data.resetBuilder(line);
 
 		} else if (STEP_REGEX.matcher(line).find()) {
-			addContentItem(data);
+			data.tryAddContentItem();
 			data.setShortDescription(line);
 
 		} else {
 			if (data.getContent().length() > 0 || !line.isEmpty()) {
-				data.getContent().append(line).append("\n"); // FIXME
+				data.getContent().append(line).append("\n"); // FIXME - Add bad end line.
 			}
 		}
-	}
-
-	private static void addContentItem(@NotNull final ProcessLineData data) {
-		if (data.canAddContentItem()) {
-			data.addContentItem();
-		}
-
-		data.getContent().setLength(0);
 	}
 
 	/**

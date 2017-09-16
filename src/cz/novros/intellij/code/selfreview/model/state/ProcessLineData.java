@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,16 +22,28 @@ public class ProcessLineData {
 	public void buildAndAddState() {
 		builder.content(items);
 		states.add(connectState());
-
+	}
+	
+	public void resetBuilder(@NotNull final String name) {
 		builder = ImmutableState.builder();
 		items = new ArrayList<>();
+		builder.name(name);
+		shortDescription = null;
+	}
+	
+	public void tryAddContentItem() {
+		if (canAddContentItem()) {
+			addContentItem();
+		}
+
+		content.setLength(0);
 	}
 
-	public boolean canAddContentItem() {
+	private boolean canAddContentItem() {
 		return shortDescription != null && !shortDescription.isEmpty() && builder != null;
 	}
 
-	public void addContentItem() {
+	private void addContentItem() {
 		items.add(Pair.of(shortDescription, content.toString()));
 	}
 

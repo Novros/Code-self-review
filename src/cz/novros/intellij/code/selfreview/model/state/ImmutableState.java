@@ -49,20 +49,40 @@ public class ImmutableState implements State {
 	@NonFinal
 	State previousState;
 
+	/**
+	 * Set next state to context.
+	 *
+	 * @param context Context which will be edited.
+	 */
 	@Override
 	public void goNextState(@NotNull final Context context) {
 		context.setCurrentState(nextState);
 	}
 
+	/**
+	 * Set previous state to context.
+	 *
+	 * @param context Context which will be edited.
+	 */
 	@Override
 	public void goPrevState(@NotNull final Context context) {
 		context.setCurrentState(previousState);
 	}
 
+	/**
+	 * Set next state for this state. This method should be called only after creation.
+	 *
+	 * @param nextState Next state.
+	 */
 	void setNextState(@NotNull final State nextState) {
 		this.nextState = nextState;
 	}
 
+	/**
+	 * Set previous state for this state. This method should be called only after creation.
+	 *
+	 * @param previousState Previous state.
+	 */
 	void setPreviousState(@NonFinal final State previousState) {
 		this.previousState = previousState;
 	}
