@@ -71,9 +71,9 @@ public class ReviewController {
 	private ViewData getViewData() {
 		final ViewData dto = new ViewData();
 
-		dto.name = context.getCurrentName();
-		dto.step = context.getCurrentStep();
-		dto.content = context.getCurrentContent();
+		dto.setName(context.getCurrentName());
+		dto.setStep(context.getCurrentStep());
+		dto.setContent(context.getCurrentContent());
 
 		return dto;
 	}

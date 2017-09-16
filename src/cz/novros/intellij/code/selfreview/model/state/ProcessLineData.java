@@ -6,31 +6,68 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
+/**
+ * Helper class for processing lines in {@link cz.novros.intellij.code.selfreview.model.DataParser}.
+ *
+ * @author Rostislav Novák
+ * @version 1.0
+ * @since 1.0
+ */
 @Getter
-@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProcessLineData {
-	private final List<ImmutableState> states = new ArrayList<>();
-	private ImmutableState.ImmutableStateBuilder builder;
 
-	private List<Pair<String, String>> items = new ArrayList<>();
-	private String shortDescription;
-	private StringBuilder content = new StringBuilder();
+	/**
+	 * Actual created {@link cz.novros.intellij.code.selfreview.model.State}.
+	 */
+	final List<ImmutableState> states = new ArrayList<>();
+	/**
+	 * Builder for actually processed {@link cz.novros.intellij.code.selfreview.model.State}.
+	 */
+	ImmutableState.ImmutableStateBuilder builder;
+	/**
+	 * Items for actual {@link #builder}.
+	 */
+	List<Pair<String, String>> items = new ArrayList<>();
+	/**
+	 * Short description for actual {@link #content}
+	 */
+	@Setter
+	String shortDescription;
 
+	/**
+	 * Content for actual {@link #shortDescription}.
+	 */
+	StringBuilder content = new StringBuilder();
+
+	/**
+	 * Build state from {@link #builder} and add it to {@link #states}.
+	 */
 	public void buildAndAddState() {
 		builder.content(items);
-		states.add(connectState());
+		states.add(buildAndConnectState());
 	}
-	
+
+	/**
+	 * Reset builder for creating next state.
+	 *
+	 * @param name Name of next state.
+	 */
 	public void resetBuilder(@NotNull final String name) {
 		builder = ImmutableState.builder();
 		items = new ArrayList<>();
 		builder.name(name);
 		shortDescription = null;
 	}
-	
+
+	/**
+	 * Will try to add content item to actual {@link cz.novros.intellij.code.selfreview.model.State} in {@link #builder}.
+	 */
 	public void tryAddContentItem() {
 		if (canAddContentItem()) {
 			addContentItem();
@@ -39,15 +76,29 @@ public class ProcessLineData {
 		content.setLength(0);
 	}
 
+	/**
+	 * If content item can be added.
+	 *
+	 * @return True if item is ready to be added. False otherwise.
+	 */
 	private boolean canAddContentItem() {
 		return shortDescription != null && !shortDescription.isEmpty() && builder != null;
 	}
 
+	/**
+	 * Add content item to {@link #items}.
+	 */
 	private void addContentItem() {
 		items.add(Pair.of(shortDescription, content.toString()));
 	}
 
-	private ImmutableState connectState() {
+	/**
+	 * Build {@link ImmutableState} from {@link #builder} and connect it to states in {@link #states}.
+	 *
+	 * @return Return builded {@link ImmutableState} from {@link #builder}.
+	 */
+	@NotNull
+	private ImmutableState buildAndConnectState() {
 		ImmutableState state;
 
 		if (!states.isEmpty()) {

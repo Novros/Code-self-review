@@ -81,10 +81,10 @@ public class StepView extends JPanel {
 	 * @param data Data which will be showed in this view.
 	 */
 	private void showStep(@NotNull final ViewData data) {
-		lblActualStep.setText(Integer.toString(data.step));
-		lblStepName.setText(data.name);
+		lblActualStep.setText(Integer.toString(data.getStep()));
+		lblStepName.setText(data.getName());
 
-		data.content.forEach(item -> {
+		data.getContent().forEach(item -> {
 			if (pnlContent.getComponents().length > 0) {
 				pnlContent.add(createStepItemSeparator());
 			}
