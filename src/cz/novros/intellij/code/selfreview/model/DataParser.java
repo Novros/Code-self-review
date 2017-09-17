@@ -128,7 +128,7 @@ public class DataParser {
 	private static void processLine(@NotNull final ProcessLineData data, @NotNull final String line) {
 		final Matcher stateMatcher = STATE_REGEX.matcher(line);
 		final Matcher stepMatcher = STEP_REGEX.matcher(line);
-		
+
 		if (stateMatcher.find()) {
 			if (data.getBuilder() != null) {
 				data.tryAddContentItem();
@@ -143,7 +143,7 @@ public class DataParser {
 
 		} else {
 			if (data.getContent().length() > 0 || !line.isEmpty()) {
-				data.getContent().append(line).append("\n"); // FIXME - Add bad end line.
+				data.getContent().append(line).append("\n");
 			}
 		}
 	}

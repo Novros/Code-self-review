@@ -23,6 +23,16 @@ import lombok.experimental.FieldDefaults;
 public class ProcessLineData {
 
 	/**
+	 * Regex for finding:
+	 * <ul>
+	 * <li>empty/whitespace lines at beginning</li>
+	 * <li>empty/whitespace lines in middle</li>
+	 * <li>trailing whitespace on any non-empty line</li>
+	 * </ul>
+	 */
+	private static final String TRAILING_EMPTY_WHITESPACES_LINE_REGEX = "([\\n\\r]+\\s*)*$";
+
+	/**
 	 * Actual created {@link cz.novros.intellij.code.selfreview.model.State}.
 	 */
 	final List<ImmutableState> states = new ArrayList<>();
@@ -89,7 +99,19 @@ public class ProcessLineData {
 	 * Add content item to {@link #items}.
 	 */
 	private void addContentItem() {
-		items.add(Pair.of(shortDescription, content.toString()));
+		items.add(Pair.of(shortDescription, getContentItem()));
+	}
+
+	/**
+	 * Return content for step item.
+	 *
+	 * @return Fined string.
+	 */
+	private String getContentItem() {
+		content.trimToSize();
+
+		final String itemContent = content.toString();
+		return itemContent.replaceAll(TRAILING_EMPTY_WHITESPACES_LINE_REGEX, "");
 	}
 
 	/**
@@ -102,7 +124,7 @@ public class ProcessLineData {
 		ImmutableState state;
 
 		builder.step(states.size() + 1);
-		
+
 		if (!states.isEmpty()) {
 			final ImmutableState firsState = states.get(0);
 			final ImmutableState lastState = states.get(states.size() - 1);
