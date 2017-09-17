@@ -149,8 +149,8 @@ public class StepView extends JPanel {
 
 		lblStepName.setFont(lblStepName.getFont().deriveFont(Font.BOLD, 18f));
 
-//		header.add(lblActualStep);
-//		header.add(lblStepsCount);
+		header.add(lblActualStep);
+		header.add(lblStepsCount);
 		header.add(lblStepName);
 
 		return header;

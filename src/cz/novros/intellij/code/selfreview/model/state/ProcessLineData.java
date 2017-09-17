@@ -101,6 +101,8 @@ public class ProcessLineData {
 	private ImmutableState buildAndConnectState() {
 		ImmutableState state;
 
+		builder.step(states.size() + 1);
+		
 		if (!states.isEmpty()) {
 			final ImmutableState firsState = states.get(0);
 			final ImmutableState lastState = states.get(states.size() - 1);

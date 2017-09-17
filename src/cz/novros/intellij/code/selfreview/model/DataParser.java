@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,12 +35,12 @@ public class DataParser {
 	/**
 	 * Regex for matching state.
 	 */
-	private static final Pattern STATE_REGEX = Pattern.compile("^([0-9]+\\. ).*");
+	private static final Pattern STATE_REGEX = Pattern.compile("^([0-9]+\\. )(.*)");
 
 	/**
 	 * Regex for matching step.
 	 */
-	private static final Pattern STEP_REGEX = Pattern.compile("^(\\* ).+");
+	private static final Pattern STEP_REGEX = Pattern.compile("^(\\* )(.+)");
 
 	/**
 	 * Path to default data in resource folder.
@@ -125,17 +126,20 @@ public class DataParser {
 	 * @param line Line from data file, which should be processed.
 	 */
 	private static void processLine(@NotNull final ProcessLineData data, @NotNull final String line) {
-		if (STATE_REGEX.matcher(line).find()) {
+		final Matcher stateMatcher = STATE_REGEX.matcher(line);
+		final Matcher stepMatcher = STEP_REGEX.matcher(line);
+		
+		if (stateMatcher.find()) {
 			if (data.getBuilder() != null) {
 				data.tryAddContentItem();
 				data.buildAndAddState();
 			}
 
-			data.resetBuilder(line);
+			data.resetBuilder(stateMatcher.group(2));
 
-		} else if (STEP_REGEX.matcher(line).find()) {
+		} else if (stepMatcher.find()) {
 			data.tryAddContentItem();
-			data.setShortDescription(line);
+			data.setShortDescription(stepMatcher.group(2));
 
 		} else {
 			if (data.getContent().length() > 0 || !line.isEmpty()) {
