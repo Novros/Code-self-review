@@ -6,6 +6,8 @@ apply plugin: 'idea'
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'application'
 
+mainClassName = "cz.novros.intellij.code.selfreview.TestForm" // FIXME - Override travis configuration
+
 buildscript {
     repositories {
         maven {
