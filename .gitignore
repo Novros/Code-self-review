@@ -1,20 +1,22 @@
 # Intellij idea things
+build/
 .idea/
 *.iml
-out/
-!lib
+*.ipr
+*.iws
+
+# Gradle files
+.gradle
+gradle/
+gradlew
+gradlew.bat
 
 # Compiled class file
 *.class
+target/
 
 # Log file
 *.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
 
 # Package Files #
 code-self-review.jar
