@@ -1,4 +1,7 @@
 # Code-self-review
+
+Build status: [![build_status](https://travis-ci.org/Novros/Code-self-review.svg?branch=master)](https://travis-ci.org/Novros/Code-self-review)
+
 Simple intellij plugin for helping you with self code review. Plugin contains my notes, which i use in my daily programming rutine. Notes are shown on right toolbar.
 
 ## Features
