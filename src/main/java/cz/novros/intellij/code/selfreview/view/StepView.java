@@ -1,5 +1,6 @@
 package cz.novros.intellij.code.selfreview.view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -10,8 +11,8 @@ import javax.swing.*;
 
 import com.intellij.ui.JBColor;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.jdesktop.swingx.HorizontalLayout;
+import org.jdesktop.swingx.JXLabel;
 import org.jdesktop.swingx.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +39,7 @@ public class StepView extends JPanel {
 	/**
 	 * Show step name.
 	 */
-	private final JLabel lblStepName;
+	private final JXLabel lblStepName;
 	/**
 	 * Panel for showing step's items.
 	 */
@@ -63,8 +64,10 @@ public class StepView extends JPanel {
 
 		lblStepsCount = new JLabel();
 		lblActualStep = new JLabel();
-		lblStepName = new JLabel();
 		pnlContent = new JPanel(new VerticalLayout());
+
+		lblStepName = new JXLabel();
+		lblStepName.setLineWrap(true);
 
 		btnNextStep = new JButton("Next >");
 		btnPrevStep = new JButton("< Prev");
@@ -145,15 +148,17 @@ public class StepView extends JPanel {
 	 * @return Panel with header labels.
 	 */
 	private JPanel createHeader() {
-		final JPanel header = new JPanel(new HorizontalLayout(GuiUtils.LAYOUT_GAP));
+		final JPanel stepNumberPanel = new JPanel(new HorizontalLayout(GuiUtils.LAYOUT_GAP));
+		final JPanel headerPanel = new JPanel(new BorderLayout());
 
 		lblStepName.setFont(lblStepName.getFont().deriveFont(Font.BOLD, 18f));
 
-		header.add(lblActualStep);
-		header.add(lblStepsCount);
-		header.add(lblStepName);
+		stepNumberPanel.add(lblActualStep);
+		stepNumberPanel.add(lblStepsCount);
+		headerPanel.add(stepNumberPanel, BorderLayout.WEST);
+		headerPanel.add(lblStepName, BorderLayout.CENTER);
 
-		return header;
+		return headerPanel;
 	}
 
 	/**
