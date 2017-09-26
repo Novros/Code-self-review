@@ -65,7 +65,7 @@ git checkout -b <name>
 
 - change branches with git checkout <branch-name>
 
-* Back to 3. until task is finished.
+* Back to 2. until task is finished.
 
 6. Review and Share
 * Integrate work from the develop branch.
