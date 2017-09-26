@@ -14,6 +14,7 @@ import com.intellij.ui.JBColor;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jdesktop.swingx.JXCollapsiblePane;
+import org.jdesktop.swingx.JXLabel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,11 +57,12 @@ public class StepItem extends JPanel {
 		final JPanel panel = new JPanel(new BorderLayout(GuiUtils.LAYOUT_GAP, GuiUtils.LAYOUT_GAP));
 		panel.setOpaque(false);
 
-		final JTextArea lblTitle = getSimpleWrapLabel(data.getLeft());
+		final JXLabel lblTitle = new JXLabel(data.getLeft());
+		lblTitle.setLineWrap(true);
 		lblTitle.setFont(lblTitle.getFont().deriveFont(Font.BOLD));
 		lblTitle.setOpaque(false);
 
-		panel.add(lblTitle);
+		panel.add(lblTitle, BorderLayout.CENTER);
 
 		if (!data.getRight().isEmpty()) {
 			panel.add(new JLabel(
